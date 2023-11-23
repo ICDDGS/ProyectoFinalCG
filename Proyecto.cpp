@@ -1,9 +1,13 @@
 /*
-PROYECTO FINAL COMPUTACION GRAFICA 
-ALUMNO:CALLEJAS SANCHEZ JUAN ANTONIO
-No CUENTA: 316294591
-GRUPO: 06
-SEMESTRE 2023-2
+PROYECTO FINAL COMPUTACION GRAFICA
+EQUIPO: 14
+CALLEJAS SANCHEZ JUAN ANTONIO - 316294591
+CRUZ CEDILLO DANIEL ALEJANDRO - 316083298
+GONZÁLEZ LORENZO DANIELA MICHEL - 314312817
+
+GRUPO: 03
+SEMESTRE 2024-1
+
 
 */
 
@@ -54,13 +58,13 @@ using namespace irrklang;
 
 
 
-FILE *guardarFrames;
+FILE* guardarFrames;
 const float toRadians = 3.14159265f / 180.0f;
-float movCoche,movZeroX,movZeroZ,rotarPokebola,rotaPuerta,contadorDiaNoche,contadorDiaNocheOff;
+float movCoche, movZeroX, movZeroZ, rotarPokebola, rotaPuerta, contadorDiaNoche, contadorDiaNocheOff;
 float movOffset;
 float rotapato;
 float giroLlanta, giroLlantaOff;
-bool avanza,patoadelante,activaCamara, activaPantallaCompleta,activa_rotaPuerta1, activa_rotaPuerta2, activarDia = true;
+bool avanza, patoadelante, activaCamara, activaPantallaCompleta, activa_rotaPuerta1, activa_rotaPuerta2, activarDia = true;
 float reproduciranimacion, habilitaranimacion, guardoFrame, reinicioFrame, ciclo, ciclo2, contador = 0;
 
 std::vector<Mesh*> meshList;
@@ -69,7 +73,7 @@ std::vector<Shader> shaderList;
 //Ventanas window
 Window mainWindow;
 //Cámaras
-Camera camera,cameraIsometrica;
+Camera camera, cameraIsometrica;
 //Texturas
 Texture brickTexture;
 Texture dirtTexture;
@@ -100,31 +104,55 @@ Model Mario;
 Model Luigi;
 Model Caparazon1, Caparazon2;
 Model ItemBlock;
-	//variables animaciones mario
-	//Carro mario
-	int poscm = 0;
-	float cmx=0.0f, cmy=0.0f, cmrot=0.0f;
-	//Carro Luigi
-	int poscl = 0;
-	float clx = 0.0f, cly = 0.0f, clrot = 0.0f;
-	int posc1 = 100;
-	//Caparazon 1
-	float c1x = 0.0f, c1y = 0.0f,c1z=10.0f, c1rot = 0.0f;
-	//Caparazon 2
-	int posc2 = 100;
-	float c2x = 0.0f, c2y = 0.0f,c2z=10.0f, c2rot = 0.0f;
-	//Item box
-	int posib = 0;
-	float ibrot = 0.0f, ibz = 0.0f;
-//Crash
-Model Crash;
-Model Coco;
-Model Cortex;
-Model Aku;
-Model Box_power;
-Model Box_fruit;
-Model Box_time;
+//variables animaciones mario
+//Carro mario
+int poscm = 0;
+float cmx = 0.0f, cmy = 0.0f, cmrot = 0.0f;
+//Carro Luigi
+int poscl = 0;
+float clx = 0.0f, cly = 0.0f, clrot = 0.0f;
+int posc1 = 100;
+//Caparazon 1
+float c1x = 0.0f, c1y = 0.0f, c1z = 10.0f, c1rot = 0.0f;
+//Caparazon 2
+int posc2 = 100;
+float c2x = 0.0f, c2y = 0.0f, c2z = 10.0f, c2rot = 0.0f;
+//Item box
+int posib = 0;
+float ibrot = 0.0f, ibz = 0.0f;
 
+//variables animaciones Aku
+int Akucm = 0;
+float Akux = 0.0f, Akuy = 0.0f, Akuz = 0.0f, Akurot = 0.0f;
+float Akuclx = 0.0f, Akucly = 0.0f, Akuclrot = 0.0f;
+
+//Crash
+Model Aku;
+Model CejaD;
+Model CejaI;
+Model P_ama;
+Model P_azul;
+Model P_rojo;
+Model P_ver;
+Model Person;
+
+//Sonic
+Model Sonic;
+Model Amy;
+Model Eggman;
+Model Knuckles;
+Model Shadow;
+Model Dark_Rider;
+Model Racing_Rooster;
+Model Speed_Star;
+Model Land_Breaker;
+Model Blazing_Banana;
+Model Item_Capsule;
+Model Ring;
+Model Cubo;
+int poscCubo = 0;
+float cuboz = 0.0f, cuboy = 0.0f, cuborot = 0.0f;
+float cbrot = 0.0f;
 //ModelAnim 
 
 Sphere cabeza = Sphere(0.5, 20, 20);
@@ -136,7 +164,7 @@ static double limitFPS = 1.0 / 60.0;
 void musica2D();
 
 //Void musica
-void musica3D();
+//void musica3D();
 
 //Void joystick
 void inputJoystick();
@@ -150,8 +178,8 @@ static const char* vShader = "shaders/shader_light.vert";
 static const char* fShader = "shaders/shader_light.frag";
 
 //cálculo del promedio de las normales para sombreado de Phong
-void calcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloat * vertices, unsigned int verticeCount, 
-						unsigned int vLength, unsigned int normalOffset)
+void calcAverageNormals(unsigned int* indices, unsigned int indiceCount, GLfloat* vertices, unsigned int verticeCount,
+	unsigned int vLength, unsigned int normalOffset)
 {
 	for (size_t i = 0; i < indiceCount; i += 3)
 	{
@@ -162,7 +190,7 @@ void calcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloa
 		glm::vec3 v2(vertices[in2] - vertices[in0], vertices[in2 + 1] - vertices[in0 + 1], vertices[in2 + 2] - vertices[in0 + 2]);
 		glm::vec3 normal = glm::cross(v1, v2);
 		normal = glm::normalize(normal);
-		
+
 		in0 += normalOffset; in1 += normalOffset; in2 += normalOffset;
 		vertices[in0] += normal.x; vertices[in0 + 1] += normal.y; vertices[in0 + 2] += normal.z;
 		vertices[in1] += normal.x; vertices[in1 + 1] += normal.y; vertices[in1 + 2] += normal.z;
@@ -180,7 +208,7 @@ void calcAverageNormals(unsigned int * indices, unsigned int indiceCount, GLfloa
 
 
 void CreateObjects() {
-	unsigned int indices[] = {		
+	unsigned int indices[] = {
 		0, 3, 1,
 		1, 3, 2,
 		2, 3, 0,
@@ -188,11 +216,11 @@ void CreateObjects() {
 	};
 
 	GLfloat vertices[] = {
-	//	x      y      z			u	  v			nx	  ny    nz
-		-1.0f, -1.0f, -0.6f,	0.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-		0.0f, -1.0f, 1.0f,		0.5f, 0.0f,		0.0f, 0.0f, 0.0f,
-		1.0f, -1.0f, -0.6f,		1.0f, 0.0f,		0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,		0.5f, 1.0f,		0.0f, 0.0f, 0.0f
+		//	x      y      z			u	  v			nx	  ny    nz
+			-1.0f, -1.0f, -0.6f,	0.0f, 0.0f,		0.0f, 0.0f, 0.0f,
+			0.0f, -1.0f, 1.0f,		0.5f, 0.0f,		0.0f, 0.0f, 0.0f,
+			1.0f, -1.0f, -0.6f,		1.0f, 0.0f,		0.0f, 0.0f, 0.0f,
+			0.0f, 1.0f, 0.0f,		0.5f, 1.0f,		0.0f, 0.0f, 0.0f
 	};
 
 	unsigned int floorIndices[] = {
@@ -248,7 +276,7 @@ void CreateObjects() {
 		20, 21, 22,
 		22, 23, 20,
 	};
-	
+
 	GLfloat cubo_vertices[] = {
 		//FRONT
 		//x		y		z		S		T			NX		NY		NZ
@@ -273,7 +301,7 @@ void CreateObjects() {
 		-0.5f, -0.5f,  -0.5f,	0.0f,	0.35f,		1.0f,	0.0f,	0.0f,
 		-0.5f, -0.5f,  0.5f,	0.23f,  0.35f,		1.0f,	0.0f,	0.0f,
 		-0.5f,  0.5f,  0.5f,	0.23f,	0.64f,		1.0f,	0.0f,	0.0f,
-		-0.5f,  0.5f,  -0.5f,	0.0f,	0.64f,		1.0f,	0.0f,	0.0f, 
+		-0.5f,  0.5f,  -0.5f,	0.0f,	0.64f,		1.0f,	0.0f,	0.0f,
 
 		//DOWN
 		-0.5f, -0.5f,  0.5f,	0.27f,	0.02f,		0.0f,	1.0f,	0.0f,
@@ -289,21 +317,21 @@ void CreateObjects() {
 
 	};
 
-	Mesh *obj1 = new Mesh();
+	Mesh* obj1 = new Mesh();
 	obj1->CreateMesh(vertices, indices, 32, 12);
 	meshList.push_back(obj1);
 
-	Mesh *piramide = new Mesh();
+	Mesh* piramide = new Mesh();
 	piramide->CreateMesh(vertices, indices, 32, 12);
 	meshList.push_back(piramide);
 
-	Mesh *piso = new Mesh();
+	Mesh* piso = new Mesh();
 	piso->CreateMesh(floorVertices, floorIndices, 32, 6);
 	meshList.push_back(piso);
 
 	calcAverageNormals(vegetacionIndices, 12, vegetacionVertices, 64, 8, 5);
 
-	Mesh *cruz = new Mesh();
+	Mesh* cruz = new Mesh();
 	cruz->CreateMesh(vegetacionVertices, vegetacionIndices, 64, 12);
 	meshList.push_back(cruz);
 
@@ -313,8 +341,8 @@ void CreateObjects() {
 
 }
 
-void CreateShaders(){
-	Shader *shader1 = new Shader();
+void CreateShaders() {
+	Shader* shader1 = new Shader();
 	shader1->CreateFromFiles(vShader, fShader);
 	shaderList.push_back(*shader1);
 }
@@ -328,10 +356,9 @@ float posXavion = 2.0, posYavion = 2.0, posZavion = 0;
 float	movAvion_x = 0.0f, movAvion_y = 0.0f;
 float giroAvion = 0;
 
-float posXdona = 0.0, posYdona = 0.0, posZdona = -7.0;
-float posXhomero = 0.0, posYhomero = 0.0, posZhomerp = -7.0;
-float	movFan_x = 0.0f, movFan_y = 0.0f, movFan_z = 0.0f;
-float giroFan = 90;
+float	movFan_x = 0.0f, movFan_y = 1.0f, movFan_z = -10.0f;
+float giroFan = 180;
+float rotring = 0;
 
 #define MAX_FRAMES 50
 int i_max_steps = 270;
@@ -361,7 +388,7 @@ int FrameIndex = 46;			//introducir datos
 bool play = false;
 int playIndex = 0;
 
-void saveFrame(void){
+void saveFrame(void) {
 
 	printf("frameindex %d\n", FrameIndex);
 	KeyFrame[FrameIndex].movAvion_x = movAvion_x;
@@ -374,18 +401,18 @@ void saveFrame(void){
 	FrameIndex++;
 }
 
-void resetElements(void){
-	
+void resetElements(void) {
+
 	movAvion_x = KeyFrame[0].movAvion_x;
 	movAvion_y = KeyFrame[0].movAvion_y;
-	giroAvion= KeyFrame[0].giroAvion;
+	giroAvion = KeyFrame[0].giroAvion;
 	movFan_x = KeyFrame[0].movFan_x;
 	movFan_y = KeyFrame[0].movFan_y;
 	movFan_z = KeyFrame[0].movFan_z;
 	giroFan = KeyFrame[0].giroFan;
 }
 
-void interpolation(void){
+void interpolation(void) {
 	KeyFrame[playIndex].movAvion_xInc = (KeyFrame[playIndex + 1].movAvion_x - KeyFrame[playIndex].movAvion_x) / i_max_steps;
 	KeyFrame[playIndex].movAvion_yInc = (KeyFrame[playIndex + 1].movAvion_y - KeyFrame[playIndex].movAvion_y) / i_max_steps;
 	KeyFrame[playIndex].giroAvionInc = (KeyFrame[playIndex + 1].giroAvion - KeyFrame[playIndex].giroAvion) / i_max_steps;
@@ -397,7 +424,7 @@ void interpolation(void){
 
 
 
-void animate(void){
+void animate(void) {
 	//Ruta carro Mario
 	switch (poscm) {
 	case 0:
@@ -491,7 +518,7 @@ void animate(void){
 		break;
 
 	}
-	
+
 	//Ruta carro Luigi
 	switch (poscl) {
 	case 0:
@@ -548,7 +575,7 @@ void animate(void){
 		else {
 			poscl = 6;
 		}
-			
+
 		break;
 	case 6:
 		if (clrot >= -90) {
@@ -582,7 +609,7 @@ void animate(void){
 				poscl = 0;
 				printf("posicion final: x= %f y=%f", clx, cly);
 			}
-			
+
 		}
 		break;
 
@@ -671,8 +698,8 @@ void animate(void){
 		break;
 
 	}
-		
-	
+
+
 	//rotacion item box
 	if (ibrot <= 360.0f) {
 		ibrot += 1.0f;
@@ -696,20 +723,127 @@ void animate(void){
 			posib = 0;
 		break;
 	}
+
+	//Movimiento mascara Aku
+	switch (Akucm) {
+	case 0:
+		Akux = 0.0;
+		Akuy = 0.0;
+		Akuz = 0.0;
+		Akucm = 1;
+		if (rotring > 360) {
+			rotring = 0;
+		}
+		break;
+
+	case 1:
+		if (Akux >= -10) {
+			Akux -= 0.05;
+			Akuy += 0.0009;
+			Akuz -= 0.05;
+			Akurot += 0.1;
+		}
+		else
+			Akucm = 2;
+		break;
 	
+	case 2:
+		if (Akux <= 0) {
+			Akux += 0.05;
+			Akuy -= 0.0009;
+			Akuz -= 0.05;
+			Akurot -= 0.1;
+			rotring += 2;
+		}
+		else
+			Akucm = 3;
+		break;
+
+	case 3:
+		if (Akux <= 10) {
+			Akux += 0.05;
+			Akuy += 0.0009;
+			Akuz += 0.05;
+			Akurot -= 0.1;
+			rotring += 2;
+		}
+		else
+			Akucm = 4;
+		break;
+
+	case 4:
+		if (Akux >= 0) {
+			Akux -= 0.05;
+			Akuy -= 0.0009;
+			Akuz += 0.05;
+			Akurot += 0.1;
+			rotring += 2;
+		}
+		else
+			Akucm = 0;
+		break;
+	}
+
+	switch (poscCubo) {
+	case 0:
+		cuboy = 0.0f;
+		cuboz = 0.0f;
+		poscCubo = 1;
+		cbrot = 0.0f;
+		break;
+
+	case 1:
+		if (cuboy <= 5) {
+			cuboy += 0.05f;
+			cuboz -= 0.05f;
+			cbrot += 2.0f;
+		}
+		else
+			poscCubo = 2;
+		break;
+	case 2:
+		if (cuboy > 0) {
+			cuboy -= 0.05f;
+			cuboz -= 0.05f;
+			cbrot += 2.0f;
+		}
+		else
+			poscCubo = 3;
+		break;
+	case 3:
+		if (cuboy <= 5) {
+			cuboy += 0.05f;
+			cuboz -= 0.05f;
+			cbrot += 2.0f;
+		}
+		else
+			poscCubo = 4;
+		break;
+	case 4:
+		if (cuboy > 0) {
+			cuboy -= 0.05f;
+			cuboz -= 0.05f;
+			cbrot += 2.0f;
+		}
+		else
+			poscCubo = 0;
+		break;
+
+	}
+
 
 
 	guardarFrames = fopen("frames.txt", "w");
 	//Movimiento del objeto
 	if (play)
-	{	
+	{
 		if (i_curr_steps >= i_max_steps) //end of animation between frames?
 		{
 			playIndex++;
-			printf("Frame [%d] reproducido \n", playIndex-1);
+			printf("Frame [%d] reproducido \n", playIndex - 1);
 			if (playIndex > FrameIndex - 2)	//end of total animation?
 			{
-				printf("Ultimo frame es [%d] \n", FrameIndex-1);
+				printf("Ultimo frame es [%d] \n", FrameIndex - 1);
 				//fprintf(guardarFrames,"FrameIndex [%d]" ,FrameIndex);
 				printf("\nTermina animacion\n");
 				playIndex = 0;
@@ -749,16 +883,15 @@ int main() {
 	mainWindow = Window(1024, 720); // 1280, 1024 or 1024, 768
 	mainWindow.Initialise();
 
-	
+
 
 	CreateObjects();
 	CreateShaders();
 
 	/*Se definen las dos cámaras a utilizar*/
-	//camera = Camera(glm::vec3(0.0f, 2.0f, 5.0f), glm::vec3(0.0f, 1.0f, 0.0f), -60.0f, 0.0f, 5.0f, 0.5f);
 	//Camara personaje
-	camera = Camera(glm::vec3(-40.0f, 10.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 180.0f, 0.0f, 5.0f, 0.5f); //(60.0f, 5.0f, 0.0f)
-	cameraIsometrica = Camera(glm::vec3(20.0f, 30.0f, 5.0f), glm::vec3(0.0f, 1.0f, 0.0f), -120.0f, -30.0f, 25.0f, 0.5f);
+	camera = Camera(glm::vec3(80.0f, 10.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 180.0f, 0.0f, 5.0f, 0.5f); //(60.0f, 5.0f, 0.0f)
+	cameraIsometrica = Camera(glm::vec3(-10.0f, 70.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -180.0f, -60.0f, 25.0f, 0.5f);
 
 	brickTexture = Texture("Textures/brick.png");
 	brickTexture.LoadTextureA();
@@ -780,7 +913,7 @@ int main() {
 
 	//Modelos Escenario
 	Museo = Model();
-	Museo.LoadModel ("Models/edificio.obj");
+	Museo.LoadModel("Models/edificio.obj");
 	//Mario
 	Mario = Model();
 	Mario.LoadModel("Models/Mario/Mario/MarioKart.obj");
@@ -792,43 +925,65 @@ int main() {
 	Caparazon2.LoadModel("Models/Mario/Green & Red Shells/shellV.obj");
 	ItemBlock = Model();
 	ItemBlock.LoadModel("Models/Mario/Item_box/box.obj");
+
 	//Modelos Crash 
-	Crash = Model();
-	Crash.LoadModel("Models/Crash/CrashKart.obj");
-	Coco = Model();
-	Coco.LoadModel("Models/Crash/CocoKart.obj");
-	Cortex = Model();
-	Cortex.LoadModel("Models/Crash/CortexKart.obj");
-	Aku= Model();
-	Aku.LoadModel("Models/Crash/AkuAku.obj");
-	Box_power = Model();
-	Box_power.LoadModel("Models/Crash/caja_poder.obj");
-	Box_fruit = Model();
-	Box_fruit.LoadModel("Models/Crash/caja_fruta.obj");
-	Box_time = Model();
-	Box_time.LoadModel("Models/Crash/caja_tiempo.obj");
-	
+	Aku = Model();
+	Aku.LoadModel("Models/Aku_cara.obj");
+	CejaD = Model();
+	CejaD.LoadModel("Models/Aku_cejad.obj");
+	CejaI = Model();
+	CejaI.LoadModel("Models/Aku_cejai.obj");
+	P_ama = Model();
+	P_ama.LoadModel("Models/Aku_pama.obj");
+	P_azul = Model();
+	P_azul.LoadModel("Models/Aku_pazul.obj");
+	P_rojo = Model();
+	P_rojo.LoadModel("Models/Aku_projo.obj");
+	P_ver = Model();
+	P_ver.LoadModel("Models/Aku_pverde.obj");
+
+	Person = Model();
+	Person.LoadModel("Models/human.obj");
+
+	//Modelos Sonic
+	Sonic = Model();
+	Sonic.LoadModel("Models/Sonic/Sonic/Sonic_LOW.obj");
+	Amy = Model();
+	Amy.LoadModel("Models/Sonic/amy/Amy.obj");
+	Eggman = Model();
+	Eggman.LoadModel("Models/Sonic/Eggman/DolEggman.obj");
+	Knuckles = Model();
+	Knuckles.LoadModel("Models/Sonic/Knuckles/Knuckles.obj");
+	Shadow = Model();
+	Shadow.LoadModel("Models/Sonic/Shadow/Shadow.obj");
+	Dark_Rider = Model();
+	Dark_Rider.LoadModel("Models/Sonic/Dark Rider/Dark Rider.obj");
+	Land_Breaker = Model();
+	Land_Breaker.LoadModel("Models/Sonic/Land Breaker/Land breaker.obj");
+	Racing_Rooster = Model();
+	Racing_Rooster.LoadModel("Models/Sonic/Racing Rooster/Racing Rooster.obj");
+	Speed_Star = Model();
+	Speed_Star.LoadModel("Models/Sonic/Speed Star/Speed Star.obj");
+	Blazing_Banana = Model();
+	Blazing_Banana.LoadModel("Models/Sonic/Blazing Banana/Blazing Banana.obj");
+	Item_Capsule = Model();
+	Item_Capsule.LoadModel("Models/Sonic/Item Capsule/Item Capsule.obj");
+	Ring = Model();
+	Ring.LoadModel("Models/Sonic/Ring/Ring.obj");
+	Cubo = Model();
+	Cubo.LoadModel("Models/Cubo.obj");
 
 
-
-//Luz direccional, sólo 1 y siempre debe de existir
+	//Luz direccional, sólo 1 y siempre debe de existir
 	mainLight = DirectionalLight(5.0f, 5.0f, 5.0f, //Luz del dia
-								0.1f, 0.3f,
-								0.0f, 0.0f, -1.0f);
+		0.1f, 0.3f,
+		0.0f, 0.0f, -1.0f);
 
-//Contador de luces puntuales
+	//Contador de luces puntuales
 	unsigned int pointLightCount = 0;
 	//Declaración de primer luz puntual
-	pointLights[0] = PointLight(1.0f, 1.0f, 1.0f,
-	//  aInt, dInt
-		5.0f, 2.0f,
-	// PosX  , PosY, PosZ
-		-42.0f, 6.0f, -31.0f,
-	//  con  , lin , exp
-		0.0f, 0.2f, 0.1f);
-	pointLightCount++;
 
-//Contador de luces tipo reflector
+	//Contador de luces tipo reflector
 	unsigned int spotLightCount = 0;
 	//linterna luz central
 	spotLights[0] = SpotLight(1.0f, 1.0f, 1.0f,
@@ -855,18 +1010,10 @@ int main() {
 		20.0f);
 	spotLightCount++;
 
-	spotLights[3] = SpotLight(0.96f, 0.91f, 0.0f,
-		1.0f, 2.0f,
-		-10.0f, 4.0f, 30.0f,
-		1.0f, 1.0f, 1.0f,
-		1.0f, 0.0f, 0.2f,
-		20.0f);
-	spotLightCount++;
 
 
-
-/*--------------------------------SKYBOX---------------------------------*/
-	//Skybox predeterminado (tarde)
+	/*--------------------------------SKYBOX---------------------------------*/
+		//Skybox predeterminado (tarde)
 	std::vector<std::string> skyboxFaces;
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_rt.tga");
 	skyboxFaces.push_back("Textures/Skybox/cupertin-lake_lf.tga");
@@ -909,12 +1056,12 @@ int main() {
 		uniformSpecularIntensity = 0, uniformShininess = 0;
 	GLuint uniformColor = 0;
 	glm::mat4 projection = glm::perspective(45.0f, (GLfloat)mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 300.0f);
-	
-	
+
+
 
 
 	movCoche = 0.0f;
-	movOffset  = 1.0f;
+	movOffset = 1.0f;
 	//movZero = 0.0f;
 	avanza = 1;
 	activaCamara = 1;
@@ -941,127 +1088,132 @@ int main() {
 		rotaPuerta = mainWindow.getrotaP()*(-1);
 		activa_rotaPuerta = true;
 	}*/
-	
-	
+
+
 	//KEYFRAMES DECLARADOS INICIALES
-	
+
 	KeyFrame[0].movFan_x = 0.0f;
-	KeyFrame[0].movFan_y = 0.0f;
+	KeyFrame[0].movFan_y = 0.1f;
+	KeyFrame[0].movFan_z = -10.0f;
 	KeyFrame[0].giroFan = 0;
 
 
-	KeyFrame[1].movFan_x = -5.0f;
-	KeyFrame[1].movFan_y = 0.4f;
+	KeyFrame[1].movFan_x = 0.0f;
+	KeyFrame[1].movFan_y = 0.2f;
+	KeyFrame[1].movFan_z = -30.0f;
 	KeyFrame[1].giroFan = 0;
 
 
-	KeyFrame[2].movFan_x = -10.0f;
-	KeyFrame[2].movFan_y = 0.2f;
-	KeyFrame[2].giroFan = 0;
+	KeyFrame[2].movFan_x = 0.0f;
+	KeyFrame[2].movFan_y = 0.1f;
+	KeyFrame[2].movFan_z = -30.0f;
+	KeyFrame[2].giroFan = 180;
 
 
-	KeyFrame[3].movFan_x = -15.0f;
-	KeyFrame[3].movFan_y = 0.4f;
-	KeyFrame[3].giroFan = 0;
+	KeyFrame[3].movFan_x = 0.0f;
+	KeyFrame[3].movFan_y = 0.2f;
+	KeyFrame[3].movFan_z = -10.0f;
+	KeyFrame[3].giroFan = 180;
 
-	KeyFrame[4].movFan_x = -20.0f;
-	KeyFrame[4].movFan_y = 0.2f;
-	KeyFrame[4].giroFan = 0.0f;
-	
-	KeyFrame[5].movFan_x = -25.0f;
-	KeyFrame[5].movFan_y = 0.4f;
-	KeyFrame[5].giroFan = 0.0f;
+	KeyFrame[4].movFan_x = 0.0f;
+	KeyFrame[4].movFan_y = 0.1f;
+	KeyFrame[4].movFan_z = -10.0f;
+	KeyFrame[4].giroFan = 90;
 
-	KeyFrame[6].movFan_x = -30.0f;
+	KeyFrame[5].movFan_x = -3.0f;
+	KeyFrame[5].movFan_y = 0.2f;
+	KeyFrame[5].movFan_z = -10.0f;
+	KeyFrame[5].giroFan = 90;
+
+	KeyFrame[6].movFan_x = -3.0f;
 	KeyFrame[6].movFan_y = 0.2f;
-	KeyFrame[6].giroFan = 0.0f;
+	KeyFrame[6].movFan_z = -10.0f;
+	KeyFrame[6].giroFan = 135;
 
-	KeyFrame[7].movFan_x = -30.0f;
-	KeyFrame[7].movFan_y = 0.4f;
-	KeyFrame[7].giroFan = 90.0f;//Aqui da vuelta
-	
-	KeyFrame[8].movFan_x = -30.0f;
+	KeyFrame[7].movFan_x = -10.0f;
+	KeyFrame[7].movFan_y = 0.1f;
+	KeyFrame[7].movFan_z = 0.0f;
+	KeyFrame[7].giroFan = 135;//Aqui da vuelta
+
+	KeyFrame[8].movFan_x = -10.0f;
 	KeyFrame[8].movFan_y = 0.2f;
-	KeyFrame[8].movFan_z = -10.0f;
-	KeyFrame[8].giroFan = 90.0f;
-	
-	KeyFrame[9].movFan_x = -30.0f;
-	KeyFrame[9].movFan_y = 0.4f;
-	KeyFrame[9].movFan_z = -20.0f;
+	KeyFrame[8].movFan_z = 0.0f;
+	KeyFrame[8].giroFan = 90;
+
+	KeyFrame[9].movFan_x = -25.0f;
+	KeyFrame[9].movFan_y = 0.1f;
+	KeyFrame[9].movFan_z = 0.0f;
 	KeyFrame[9].giroFan = 90.0f;
 
-	KeyFrame[10].movFan_x = -30.0f;
+	KeyFrame[10].movFan_x = -25.0f;
 	KeyFrame[10].movFan_y = 0.2f;
-	KeyFrame[10].movFan_z = -30.0f;
-	KeyFrame[10].giroFan = 90.0f;
+	KeyFrame[10].movFan_z = 0.0f;
+	KeyFrame[10].giroFan = 270.0f;
 
-	KeyFrame[11].movFan_x = -30.0f;
-	KeyFrame[11].movFan_y = 0.4f;
-	KeyFrame[11].movFan_z = -30.0f;
-	KeyFrame[11].giroFan = 180.0f;//Vuelve a girar
+	KeyFrame[11].movFan_x = -10.0f;
+	KeyFrame[11].movFan_y = 0.1f;
+	KeyFrame[11].movFan_z = 0.0f;
+	KeyFrame[11].giroFan = 270.0f;//Vuelve a girar
 
-	KeyFrame[12].movFan_x = -30.0f;
+	KeyFrame[12].movFan_x = -10.0f;
 	KeyFrame[12].movFan_y = 0.2f;
-	KeyFrame[12].movFan_z = -30.0f;
+	KeyFrame[12].movFan_z = 0.0f;
 	KeyFrame[12].giroFan = 180.0f;
 
-
-	KeyFrame[13].movFan_x = -25.0f;
-	KeyFrame[13].movFan_y = 0.4f;
-	KeyFrame[13].movFan_z = -30.0f;
+	KeyFrame[13].movFan_x = -10.0f;
+	KeyFrame[13].movFan_y = 0.1f;
+	KeyFrame[13].movFan_z = 10.0f;
 	KeyFrame[13].giroFan = 180.0f;
 
-
-	KeyFrame[14].movFan_x = -20.0f;
+	KeyFrame[14].movFan_x = -10.0f;
 	KeyFrame[14].movFan_y = 0.2f;
-	KeyFrame[14].movFan_z = -30.0f;
-	KeyFrame[14].giroFan = 180.0f;
+	KeyFrame[14].movFan_z = 10.0f;
+	KeyFrame[14].giroFan = 270.0f;
 
+	KeyFrame[15].movFan_x = 0.0f;
+	KeyFrame[15].movFan_y = 0.1f;
+	KeyFrame[15].movFan_z = 10.0f;
+	KeyFrame[15].giroFan = 270.0f;
 
-	KeyFrame[15].movFan_x = -15.0f;
-	KeyFrame[15].movFan_y = 0.4f;
-	KeyFrame[15].movFan_z = -30.0f;
-	KeyFrame[15].giroFan = 180.0f;
-
-	KeyFrame[16].movFan_x = -10.0f;
+	KeyFrame[16].movFan_x = 0.0f;
 	KeyFrame[16].movFan_y = 0.2f;
-	KeyFrame[16].movFan_z = -30.0f;
+	KeyFrame[16].movFan_z = 10.0f;
 	KeyFrame[16].giroFan = 180.0f;
 
-	KeyFrame[17].movFan_x = -5.0f;
-	KeyFrame[17].movFan_y = 0.4f;
-	KeyFrame[17].movFan_z = -30.0f;
+	KeyFrame[17].movFan_x = 0.0f;
+	KeyFrame[17].movFan_y = 0.1f;
+	KeyFrame[17].movFan_z = 25.0f;
 	KeyFrame[17].giroFan = 180.0f;
 
 	KeyFrame[18].movFan_x = 0.0f;
 	KeyFrame[18].movFan_y = 0.2f;
-	KeyFrame[18].movFan_z = -30.0f;
-	KeyFrame[18].giroFan = 180.0f;
+	KeyFrame[18].movFan_z = 25.0f;
+	KeyFrame[18].giroFan = 0.0f;
 
 	KeyFrame[19].movFan_x = 0.0f;
-	KeyFrame[19].movFan_y = 0.4f;
-	KeyFrame[19].movFan_z = -20.0f;
-	KeyFrame[19].giroFan = 270.0f;//Vuelve a girar
+	KeyFrame[19].movFan_y = 0.1f;
+	KeyFrame[19].movFan_z = 10.0f;
+	KeyFrame[19].giroFan = 0.0f;//Vuelve a girar
 
 	KeyFrame[20].movFan_x = 0.0f;
 	KeyFrame[20].movFan_y = 0.2f;
-	KeyFrame[20].movFan_z = -10.0f;
-	KeyFrame[20].giroFan = 270.0f;
+	KeyFrame[20].movFan_z = 10.0f;
+	KeyFrame[20].giroFan = -90.0f;
 
-	KeyFrame[21].movFan_x = 0.0f;
-	KeyFrame[21].movFan_y = 0.4f;
-	KeyFrame[21].movFan_z = 0.0f;
-	KeyFrame[21].giroFan = 270.0f;
+	KeyFrame[21].movFan_x = 15.0f;
+	KeyFrame[21].movFan_y = 0.1f;
+	KeyFrame[21].movFan_z = 10.0f;
+	KeyFrame[21].giroFan = -90.0f;
 
-	KeyFrame[22].movFan_x = 0.0f;
+	KeyFrame[22].movFan_x = 15.0f;
 	KeyFrame[22].movFan_y = 0.2f;
-	KeyFrame[22].movFan_z = 0.0f;
-	KeyFrame[22].giroFan = 360.0f;//Ultima vuelta
+	KeyFrame[22].movFan_z = 10.0f;
+	KeyFrame[22].giroFan = -45.0f;//Ultima vuelta
 
-	KeyFrame[23].movFan_x = -10.0f;
-	KeyFrame[23].movFan_y = 0.0f;
+	KeyFrame[23].movFan_x = 15.0f;
+	KeyFrame[23].movFan_y = 0.1f;
 	KeyFrame[23].movFan_z = 0.0f;
-	KeyFrame[23].giroFan = 360.0f;
+	KeyFrame[23].giroFan = -45.0f;
 
 
 	Sphere sp = Sphere(0.5, 10, 10);
@@ -1073,16 +1225,16 @@ int main() {
 	//musica3D();
 
 /*************Loop mientras no se cierra la ventana**************/
-	while (!mainWindow.getShouldClose()){
+	while (!mainWindow.getShouldClose()) {
 
 		if (mainWindow.getactivaLuces() == 1)
 		{
-			spotLights[1].SetFlash((glm::vec3(-20.0f, 8.0f, -28.0f)), glm::vec3(0.0f, -1.5f, 0.0f));
-			spotLights[2].SetFlash((glm::vec3(13.0f, 8.0f, -28.0f)), glm::vec3(0.0f, -1.5f, 0.0f));
+			spotLights[1].SetFlash((glm::vec3(30.0f, 6.5f, 13.5f)), glm::vec3(0.0f, 3.0f, 0.0f));
+			spotLights[2].SetFlash((glm::vec3(30.0f, 6.5f, -13.5f)), glm::vec3(0.0f, 3.0f, 0.0f));
 		}
 		else {
-			spotLights[1].SetFlash((glm::vec3(-20.0f, 8.0f, -28.0f)), glm::vec3(0.0f, 0.0f, 0.0f));
-			spotLights[2].SetFlash((glm::vec3(13.0f, 8.0f, -28.0f)), glm::vec3(0.0f, 0.0f, 0.0f));
+			spotLights[1].SetFlash((glm::vec3(30.0f, 6.5f, 13.5f)), glm::vec3(0.0f, 0.0f, 0.0f));
+			spotLights[2].SetFlash((glm::vec3(30.0f, 6.5f, -13.5f)), glm::vec3(0.0f, 0.0f, 0.0f));
 		}
 
 		GLfloat now = glfwGetTime();
@@ -1090,10 +1242,10 @@ int main() {
 		//deltaTime += (now - lastTime) / limitFPS;
 		lastTime = now;
 
-		
+
 		//inputJoystick();
 
-/*---------------------------------------------------------------------------------------------------------*/	
+/*---------------------------------------------------------------------------------------------------------*/
 		////Si se pulsa la tecla Q, se activa pantalla completa, en caso contrario se pulse M, camara normal
 		//if (mainWindow.getactivaPantallaCompleta() == 1) {
 		//	//activaPantallaCompleta = 1;
@@ -1139,7 +1291,7 @@ int main() {
 			}
 		}
 ********************************************************************************************************/
-		
+
 		shaderList[0].UseShader();
 		uniformModel = shaderList[0].GetModelLocation();
 		uniformProjection = shaderList[0].GetProjectionLocation();
@@ -1163,22 +1315,40 @@ int main() {
 
 		//Museo
 		glm::mat4 museo(1.0);
-		
+
 		//Mario
 		glm::mat4 mario(1.0);
 		glm::mat4 luigi(1.0f);
 		glm::mat4 caparazon1(1.0);
 		glm::mat4 caparazon2(1.0);
 		glm::mat4 itemblock(1.0);
+		
 		//Crash
 		glm::mat4 model(1.0);
-		glm::mat4 crash(1.0);
-		glm::mat4 coco(1.0);
-		glm::mat4 cortex(1.0);
 		glm::mat4 aku(1.0);
-		glm::mat4 poder(1.0);
-		glm::mat4 fruta(1.0);
-		glm::mat4 tiempo(1.0);
+		glm::mat4 cejai(1.0);
+		glm::mat4 cejad(1.0);
+		glm::mat4 p_a(1.0);
+		glm::mat4 p_v(1.0);
+		glm::mat4 p_az(1.0);
+		glm::mat4 p_r(1.0);
+		glm::mat4 persona(1.0);
+		glm::vec3 pos_per(1.0);
+
+		//Sonic
+		glm::mat4 sonic(1.0);
+		glm::mat4 amy(1.0);
+		glm::mat4 eggman(1.0);
+		glm::mat4 knuckles(1.0);
+		glm::mat4 shadow(1.0);
+		glm::mat4 dark_rider(1.0);
+		glm::mat4 racing_rooster(1.0);
+		glm::mat4 land_breaker(1.0);
+		glm::mat4 speed_star(1.0);
+		glm::mat4 blazing_banana(1.0);
+		glm::mat4 item_capsule(1.0);
+		glm::mat4 ring(1.0);
+		glm::mat4 cubo(1.0);
 
 		glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f);
 
@@ -1204,7 +1374,7 @@ int main() {
 			camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 			glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
 			glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
-			
+
 		}
 		/**********************************************************************************************/
 
@@ -1218,36 +1388,36 @@ int main() {
 
 		//Mario en carro
 		mario = glm::mat4(1.0);
-		mario = glm::translate(mario, glm::vec3(-42.9f+cmy, 2.7f, 2.6f+cmx));
+		mario = glm::translate(mario, glm::vec3(-42.9f + cmy, 2.7f, 2.6f + cmx));
 		mario = glm::scale(mario, glm::vec3(0.03f));
-		mario = glm::rotate(mario, (180+ cmrot) * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
+		mario = glm::rotate(mario, (180 + cmrot) * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(mario));
 		Mario.RenderModel();
 
 		//Luigi en carro
 		luigi = glm::mat4(1.0);
-		luigi = glm::translate(luigi, glm::vec3(-43.4f+cly, 2.7f, 2.6f+clx));
+		luigi = glm::translate(luigi, glm::vec3(-43.4f + cly, 2.7f, 2.6f + clx));
 		luigi = glm::scale(luigi, glm::vec3(0.025f));
-		luigi = glm::rotate(luigi, (180+clrot) * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
+		luigi = glm::rotate(luigi, (180 + clrot) * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(luigi));
 		Luigi.RenderModel();
-		
+
 		//Caparazon 1
 		caparazon1 = glm::mat4(1.0);
-		caparazon1 = glm::translate(caparazon1, glm::vec3(-40.5f+c1y, 2.6f+c1z, -2.5f+c1x));
+		caparazon1 = glm::translate(caparazon1, glm::vec3(-40.5f + c1y, 2.6f + c1z, -2.5f + c1x));
 		caparazon1 = glm::scale(caparazon1, glm::vec3(0.15f));
-		caparazon1 = glm::rotate(caparazon1, (180+c1rot) * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
+		caparazon1 = glm::rotate(caparazon1, (180 + c1rot) * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(caparazon1));
 		Caparazon1.RenderModel();
 
 		//Caparazon 2
 		caparazon2 = glm::mat4(1.0);
-		caparazon2 = glm::translate(caparazon2, glm::vec3(-41.0f+c2y, 2.6f+c2z, -2.5f+c2x));
+		caparazon2 = glm::translate(caparazon2, glm::vec3(-41.0f + c2y, 2.6f + c2z, -2.5f + c2x));
 		caparazon2 = glm::scale(caparazon2, glm::vec3(0.15f));
-		caparazon2 = glm::rotate(caparazon2, (180+c2rot) * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
+		caparazon2 = glm::rotate(caparazon2, (180 + c2rot) * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(caparazon2));
 		Caparazon2.RenderModel();
-		
+
 		//Bloques de objetos
 		//1
 		itemblock = glm::mat4(1.0);
@@ -1258,7 +1428,7 @@ int main() {
 		ItemBlock.RenderModel();
 		//2
 		itemblock = glm::mat4(1.0);
-		itemblock = glm::translate(itemblock, glm::vec3(-41.0f, 3.0f + ibz, -2.5f ));
+		itemblock = glm::translate(itemblock, glm::vec3(-41.0f, 3.0f + ibz, -2.5f));
 		itemblock = glm::scale(itemblock, glm::vec3(0.15f));
 		itemblock = glm::rotate(itemblock, (180 + ibrot) * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(itemblock));
@@ -1266,63 +1436,210 @@ int main() {
 
 		//Sala de Crash
 		//----------------------------------------------------------------
-		//Crash con auto
-		crash = glm::mat4(1.0);
-		crash = glm::translate(crash, glm::vec3(-41.0f, 0.0f, -33.0f));
-		crash = glm::scale(crash, glm::vec3(0.1f, 0.1f, 0.1f));
-		crash = glm::rotate(crash, giroFan * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(crash));
-		Crash.RenderModel();
-
-		//Coco con auto
-		coco = glm::mat4(1.0);
-		coco = glm::translate(coco, glm::vec3(-41.0f, 0.0f, -38.0f));
-		coco = glm::scale(coco, glm::vec3(0.1f, 0.1f, 0.1f));
-		coco = glm::rotate(coco, giroFan * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(coco));
-		Coco.RenderModel();
-
-		//Cortex con auto
-		cortex = glm::mat4(1.0);
-		cortex = glm::translate(cortex, glm::vec3(-41.0f, 0.0f, -28.0f));
-		cortex = glm::scale(cortex, glm::vec3(0.1f, 0.1f, 0.1f));
-		cortex = glm::rotate(cortex, giroFan * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(cortex));
-		Cortex.RenderModel();
-
-		//Aku Aku
+		//Cara Aku
 		aku = glm::mat4(1.0);
-		aku = glm::translate(aku, glm::vec3(0.0f, 0.0f, 0.0f));
-		aku = glm::scale(aku, glm::vec3(1.0f, 1.0f, 1.0f));
-		aku = glm::rotate(aku, giroFan * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
+		aku = glm::translate(aku, glm::vec3(0.0f + Akux, 0.0f , -30.0f + Akuz));
+		aku = glm::scale(aku, glm::vec3(0.2f, 0.2f, 0.2f));
+		aku = glm::rotate(aku, 0 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
 		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(aku));
 		Aku.RenderModel();
 
-		//Caja de poder
-		poder = glm::mat4(1.0);
-		poder = glm::translate(poder, glm::vec3(-41.0f, 7.0f, -38.0f));
-		poder= glm::scale(poder, glm::vec3(2.0f, 2.0f, 2.0f));
-		poder = glm::rotate(poder, giroFan * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(poder));
-		Box_power.RenderModel();
+		//Ceja Izq Aku
+		cejad = glm::mat4(1.0);
+		cejad = glm::translate(cejad, glm::vec3(0.0f + Akux, 0.0f + Akuy, -30.0f + Akuz));
+		cejad = glm::scale(cejad, glm::vec3(0.2f, 0.2f, 0.2f));
+		cejad = glm::rotate(cejad, 0 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(cejad));
+		CejaD.RenderModel();
 
-		//Caja de fruta
-		fruta = glm::mat4(1.0);
-		fruta = glm::translate(fruta, glm::vec3(-41.0f, 7.0f, -28.0f));
-		fruta = glm::scale(fruta, glm::vec3(2.0f, 2.0f, 2.0f));
-		fruta = glm::rotate(fruta, giroFan * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(fruta));
-		Box_fruit.RenderModel();
+		//Ceja Der Aku
+		cejai = glm::mat4(1.0);
+		cejai = glm::translate(cejai, glm::vec3(0.0f + Akux, 0.0f + Akuy, -30.0f + Akuz));
+		cejai = glm::scale(cejai, glm::vec3(0.2f, 0.2f, 0.2f));
+		cejai = glm::rotate(cejai, 0 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(cejai));
+		CejaI.RenderModel();
 
-		//Cajas de tiempo
-		tiempo = glm::mat4(1.0);
-		tiempo = glm::translate(tiempo, glm::vec3(-41.0f, 12.0f, -33.0f));
-		tiempo = glm::scale(tiempo, glm::vec3(2.0f, 2.0f, 2.0f));
-		tiempo = glm::rotate(tiempo, giroFan * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
-		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(tiempo));
-		Box_time.RenderModel();
+		//Plumas Aku
+		p_a = glm::mat4(1.0);
+		p_a = glm::translate(p_a, glm::vec3(0.0f + Akux, 0.0f, -30.0f + Akuz));
+		p_a = glm::scale(p_a, glm::vec3(0.2f, 0.2f, 0.2f));
+		p_a = glm::rotate(p_a, (0 + Akurot) * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(p_a));
+		P_ama.RenderModel();
+
+		//Plumas Aku
+		p_az = glm::mat4(1.0);
+		p_az = glm::translate(p_az, glm::vec3(0.0f + Akux, 0.0f, -30.0f + Akuz));
+		p_az = glm::scale(p_az, glm::vec3(0.2f, 0.2f, 0.2f));
+		p_az = glm::rotate(p_az, (0 + Akurot) * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(p_az));
+		P_azul.RenderModel();
+
+		//Plumas Aku
+		p_r = glm::mat4(1.0);
+		p_r = glm::translate(p_r, glm::vec3(0.0f + Akux, 0.0f, -30.0f + Akuz));
+		p_r = glm::scale(p_r, glm::vec3(0.2f, 0.2f, 0.2f));
+		p_r = glm::rotate(p_r, (0 + Akurot) * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(p_r));
+		P_rojo.RenderModel();
+
+		//Plumas Aku
+		p_v = glm::mat4(1.0);
+		p_v = glm::translate(p_v, glm::vec3(0.0f + Akux, 0.0f, -30.0f + Akuz));
+		p_v = glm::scale(p_v, glm::vec3(0.2f, 0.2f, 0.2f));
+		p_v = glm::rotate(p_v, (0 + Akurot) * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(p_v));
+		P_ver.RenderModel();
+
+		//Persona
+		persona = glm::mat4(1.0);
+		pos_per = glm::vec3(movFan_x,movFan_y,movFan_z);
+		persona = glm::translate(persona, pos_per);
+		persona = glm::scale(persona, glm::vec3(3.0f, 3.0f, 3.0f));
+		persona = glm::rotate(persona, giroFan * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(persona));
+		Person.RenderModel();
+
+		//Sala de Sonic
+		//--------------------------------------------------------------
+		//Sonic
+		sonic = glm::mat4(1.0);
+		sonic = glm::translate(sonic, glm::vec3(-10.0f, 1.5f, 54.0f));
+		sonic = glm::scale(sonic, glm::vec3(0.5f, 0.5f, 0.5f));
+		sonic = glm::rotate(sonic, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		sonic = glm::rotate(sonic, 90 * toRadians, glm::vec3(1.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(sonic));
+		Sonic.RenderModel();
+
+		//Amy
+		amy = glm::mat4(1.0);
+		amy = glm::translate(amy, glm::vec3(-4.0f, 1.5f, 56.0f));
+		amy = glm::scale(amy, glm::vec3(0.5f, 0.5f, 0.5f));
+		amy = glm::rotate(amy, 0 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		amy = glm::rotate(amy, 0 * toRadians, glm::vec3(5.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(amy));
+		Amy.RenderModel();
+
+		//Eggman
+		eggman = glm::mat4(1.0);
+		eggman = glm::translate(eggman, glm::vec3(0.0f, 1.5f, 56.0f));
+		eggman = glm::scale(eggman, glm::vec3(0.5f, 0.5f, 0.5f));
+		eggman = glm::rotate(eggman, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(eggman));
+		Eggman.RenderModel();
+
+		//Knuckles
+		knuckles = glm::mat4(1.0);
+		knuckles = glm::translate(knuckles, glm::vec3(6.0f, 1.5f, 57.0f));
+		knuckles = glm::scale(knuckles, glm::vec3(2.0f, 2.0f, 2.0f));
+		knuckles = glm::rotate(knuckles, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(knuckles));
+		Knuckles.RenderModel();
+
+		//Shadow
+		shadow = glm::mat4(1.0);
+		shadow = glm::translate(shadow, glm::vec3(10.0f, 1.5f, 54.0f));
+		shadow = glm::scale(shadow, glm::vec3(2.0f, 2.0f, 2.0f));
+		shadow = glm::rotate(shadow, 180 * toRadians, glm::vec3(0.0f, 1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(shadow));
+		Shadow.RenderModel();
+
+		//Dark Rider
+		dark_rider = glm::mat4(1.0);
+		dark_rider = glm::translate(dark_rider, glm::vec3(16.0f, 1.5f, 50.0f));
+		dark_rider = glm::scale(dark_rider, glm::vec3(1.5f, 1.5f, 1.5f));
+		dark_rider = glm::rotate(dark_rider, 90 * toRadians, glm::vec3(0.0f, -5.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(dark_rider));
+		Dark_Rider.RenderModel();
+
+		//Racing Rooster
+		racing_rooster = glm::mat4(1.0);
+		racing_rooster = glm::translate(racing_rooster, glm::vec3(15.0f, 1.5f, 46.0f));
+		racing_rooster = glm::scale(racing_rooster, glm::vec3(1.0f, 1.0f, 1.0f));
+		racing_rooster = glm::rotate(racing_rooster, 90 * toRadians, glm::vec3(0.0f, -5.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(racing_rooster));
+		Racing_Rooster.RenderModel();
+
+		//Speed Star
+		speed_star = glm::mat4(1.0);
+		speed_star = glm::translate(speed_star, glm::vec3(16.0f, 1.5f, 41.0f));
+		speed_star = glm::scale(speed_star, glm::vec3(1.5f, 1.5f, 1.5f));
+		speed_star = glm::rotate(speed_star, 90 * toRadians, glm::vec3(0.0f, -5.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(speed_star));
+		Speed_Star.RenderModel();
+
+		//Land Breaker
+		land_breaker = glm::mat4(1.0);
+		land_breaker = glm::translate(land_breaker, glm::vec3(15.0f, 1.5f, 36.9f));
+		land_breaker = glm::scale(land_breaker, glm::vec3(0.01f, 0.01f, 0.01f));
+		land_breaker = glm::rotate(land_breaker, 90 * toRadians, glm::vec3(0.0f, -5.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(land_breaker));
+		Land_Breaker.RenderModel();
+
+		//Blazing Banana
+		blazing_banana = glm::mat4(1.0);
+		blazing_banana = glm::translate(blazing_banana, glm::vec3(15.0f, 1.5f, 32.0f));
+		blazing_banana = glm::scale(blazing_banana, glm::vec3(1.0f, 1.0f, 1.0f));
+		blazing_banana = glm::rotate(blazing_banana, 90 * toRadians, glm::vec3(0.0f, -5.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(blazing_banana));
+		Blazing_Banana.RenderModel();
+
+		//Item Capsule
+		item_capsule = glm::mat4(1.0);
+		item_capsule = glm::translate(item_capsule, glm::vec3(-12.0f, 10.0f, 47.0f));
+		item_capsule = glm::scale(item_capsule, glm::vec3(1.0f, 1.0f, 1.0f));
+		item_capsule = glm::rotate(item_capsule, 0 * toRadians, glm::vec3(0.0f, 5.0f, 0.0f));
+		item_capsule = glm::rotate(item_capsule, 0 * toRadians, glm::vec3(0.0f, 5.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(item_capsule));
+		Item_Capsule.RenderModel();
+
+		item_capsule = glm::mat4(1.0);
+		item_capsule = glm::translate(item_capsule, glm::vec3(-12.0f, 10.0f, 41.0f));
+		item_capsule = glm::scale(item_capsule, glm::vec3(1.0f, 1.0f, 1.0f));
+		item_capsule = glm::rotate(item_capsule, 0 * toRadians, glm::vec3(0.0f, 5.0f, 0.0f));
+		item_capsule = glm::rotate(item_capsule, 0 * toRadians, glm::vec3(0.0f, 5.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(item_capsule));
+		Item_Capsule.RenderModel();
+
+		item_capsule = glm::mat4(1.0);
+		item_capsule = glm::translate(item_capsule, glm::vec3(-12.0f, 10.0f, 35.0f));
+		item_capsule = glm::scale(item_capsule, glm::vec3(1.0f, 1.0f, 1.0f));
+		item_capsule = glm::rotate(item_capsule, 0 * toRadians, glm::vec3(0.0f, 5.0f, 0.0f));
+		item_capsule = glm::rotate(item_capsule, 0 * toRadians, glm::vec3(0.0f, 5.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(item_capsule));
+		Item_Capsule.RenderModel();
+
+		//ring
+		ring = glm::mat4(1.0);
+		ring = glm::translate(ring, glm::vec3(-12.0f, 4.0f, 47.0f));
+		ring = glm::scale(ring, glm::vec3(1.0f, 1.0f, 1.0f));
+		ring = glm::rotate(ring, (180 + rotring ) * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(ring));
+		Ring.RenderModel();
+
+		ring = glm::mat4(1.0);
+		ring = glm::translate(ring, glm::vec3(-12.0f, 4.0f, 41.0f));
+		ring = glm::scale(ring, glm::vec3(1.0f, 1.0f, 1.0f));
+		ring = glm::rotate(ring, (180 + rotring ) * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(ring));
+		Ring.RenderModel();
+
+		ring = glm::mat4(1.0);
+		ring = glm::translate(ring, glm::vec3(-12.0f, 4.0f, 35.0f));
+		ring = glm::scale(ring, glm::vec3(1.0f, 1.0f, 1.0f));
+		ring = glm::rotate(ring, (180 + rotring) * toRadians, glm::vec3(0.0f, -1.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(ring));
+		Ring.RenderModel();
 
 
+		//Cubo
+		cubo = glm::mat4(1.0);
+		cubo = glm::translate(cubo, glm::vec3(-8.0f, 3.0f + cuboy, 50.0f + cuboz));
+		cubo = glm::scale(cubo, glm::vec3(1.5f, 1.5f, 1.5f));
+		cubo = glm::rotate(cubo, (180 + cbrot) * toRadians, glm::vec3(-5.0f, 0.0f, 0.0f));
+		glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(cubo));
+		Cubo.RenderModel();
 
 
 		glUseProgram(0);
@@ -1333,12 +1650,12 @@ int main() {
 	return 0;
 }
 
-void inputKeyframes(bool* keys){
+void inputKeyframes(bool* keys) {
 	if (keys[GLFW_KEY_SPACE])
 	{
-		
-		if(reproduciranimacion<1)
-		{	
+
+		if (reproduciranimacion < 1)
+		{
 			if (play == false && (FrameIndex > 1))
 			{
 				//resetElements();
@@ -1366,9 +1683,9 @@ void inputKeyframes(bool* keys){
 			reproduciranimacion = 0;
 		}
 	}
-	
-	if (keys[GLFW_KEY_L]){
-		if (guardoFrame < 1){
+
+	if (keys[GLFW_KEY_L]) {
+		if (guardoFrame < 1) {
 			saveFrame();
 			printf("movAvion_x es: %f\n", movAvion_x);
 			//printf("movAvion_y es: %f\n", movAvion_y);
@@ -1377,21 +1694,21 @@ void inputKeyframes(bool* keys){
 			reinicioFrame = 0;
 		}
 	}
-	if (keys[GLFW_KEY_P]){
-		if (reinicioFrame < 1){
-			guardoFrame=0;
+	if (keys[GLFW_KEY_P]) {
+		if (reinicioFrame < 1) {
+			guardoFrame = 0;
 		}
 	}
-	
+
 	//Implementación de teclado para la variable de traslación en X positivo
-	if (keys[GLFW_KEY_1]){
-		if (ciclo < 1){
+	if (keys[GLFW_KEY_1]) {
+		if (ciclo < 1) {
 			movAvion_x += 1.0f;
 			ciclo++;
 			ciclo2 = 0;
 			printf("reinicia con 2\n");
 		}
-		
+
 	}
 	//Implementación de teclado para la variable de traslación en X negativo
 	if (keys[GLFW_KEY_3]) {
@@ -1453,10 +1770,10 @@ void inputKeyframes(bool* keys){
 		}
 	}
 
-	if (keys[GLFW_KEY_2]){
-		if(ciclo2<1)
+	if (keys[GLFW_KEY_2]) {
+		if (ciclo2 < 1)
 		{
-		ciclo = 0;
+			ciclo = 0;
 		}
 	}
 
@@ -1548,9 +1865,9 @@ void musica2D() {
 	//Inicia el módulo con los parámetros por defecto
 	ISoundEngine* engine = createIrrKlangDevice();
 	ISoundEngine* engine2 = createIrrKlangDevice();
-	
-	if (!engine){
-		printf("No se pudo iniciar\n"); 
+
+	if (!engine) {
+		printf("No se pudo iniciar\n");
 	}
 
 	engine->play2D("media/fondo.mp3", false);//Se reproduce audio de fondo
@@ -1559,4 +1876,5 @@ void musica2D() {
 	//engine->drop(); 
 
 }
+
 
